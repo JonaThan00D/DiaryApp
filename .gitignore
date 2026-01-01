@@ -1,0 +1,11 @@
+# VS
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+bin/
+obj/
+
+# Local app config
+appsettings.Development.json
