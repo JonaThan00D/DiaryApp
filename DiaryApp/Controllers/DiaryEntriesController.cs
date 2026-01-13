@@ -1,24 +1,24 @@
 ﻿using DiaryApp.Data;
 using DiaryApp.Models;
+using DiaryApp.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace DiaryApp.Controllers
 {
     public class DiaryEntriesController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly DiaryEntryService _diaryService;
 
         //constructor
-        public DiaryEntriesController(ApplicationDbContext db)
+        public DiaryEntriesController(ApplicationDbContext db, DiaryEntryService diaryService)
         {
             _db = db;
+            _diaryService = diaryService;
         }
 
         public IActionResult Index()
-            //DiaryEntries = sql server table name
         {
-            List<DiaryEntry> objDiaryEntryList = _db.DiaryEntries
-                .OrderByDescending(e => e.Created)
-                .ToList();
+            List<DiaryEntry> objDiaryEntryList = _diaryService.GetAll();
             return View(objDiaryEntryList);
         }
 
@@ -37,8 +37,7 @@ namespace DiaryApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.DiaryEntries.Add(obj); //Adding the new diary entry to the db
-                _db.SaveChanges(); //saving changes
+                _diaryService.Create(obj);
                 return RedirectToAction("Index");
             }
 
@@ -46,13 +45,13 @@ namespace DiaryApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(Guid? id) {
+        public IActionResult Edit(Guid id) {
 
             if(id == null || id == Guid.Empty)
             {
                 return NotFound();
             }
-            DiaryEntry? diaryEntry = _db.DiaryEntries.Find(id);
+            DiaryEntry? diaryEntry = _diaryService.GetById(id);
 
             if (diaryEntry == null)
             {
@@ -72,8 +71,7 @@ namespace DiaryApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.DiaryEntries.Update(obj); //Updating entry in db
-                _db.SaveChanges(); //saving changes
+                _diaryService.Update(obj);
                 return RedirectToAction("Index");
             }
 
@@ -81,14 +79,14 @@ namespace DiaryApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
 
             if (id == null || id == Guid.Empty)
             {
                 return NotFound();
             }
-            DiaryEntry? diaryEntry = _db.DiaryEntries.Find(id);
+            DiaryEntry? diaryEntry = _diaryService.GetById(id);
 
             if (diaryEntry == null)
             {
@@ -102,8 +100,7 @@ namespace DiaryApp.Controllers
         {
 
 
-                _db.DiaryEntries.Remove(obj); //Remove entry from db
-                _db.SaveChanges(); //saving changes
+                _diaryService.Delete(obj);
                 return RedirectToAction("Index");
         }
      }
