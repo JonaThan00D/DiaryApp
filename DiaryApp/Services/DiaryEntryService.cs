@@ -9,10 +9,13 @@ namespace DiaryApp.Services
     public class DiaryEntryService
     {
         private readonly ApplicationDbContext _db;
+        private readonly ILogger<DiaryEntryService> _logger;
 
-        public DiaryEntryService(ApplicationDbContext db)
+
+        public DiaryEntryService(ApplicationDbContext db, ILogger<DiaryEntryService> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public List<DiaryEntry> GetAll()
@@ -40,6 +43,8 @@ namespace DiaryApp.Services
             };
             _db.DiaryEntries.Add(entry);
             _db.SaveChanges();
+
+            _logger.LogInformation($"DiaryEntry created: {vm.Title}");
         }
 
 
@@ -52,12 +57,16 @@ namespace DiaryApp.Services
             entry.Content = vm.Content;
             _db.DiaryEntries.Update(entry);
             _db.SaveChanges();
+
+            _logger.LogInformation($"DiaryEntry updated: {vm.Title}");
         }
 
         public void Delete(DiaryEntry entry)
         {
             _db.DiaryEntries?.Remove(entry);
             _db.SaveChanges();
+
+            _logger.LogWarning($"DiaryEntry deleted: Id: {entry.Id}");
         }
     }
 }
