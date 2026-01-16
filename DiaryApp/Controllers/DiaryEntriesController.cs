@@ -51,7 +51,15 @@ namespace DiaryApp.Controllers
             {
                 return NotFound();
             }
-            return View(diaryEntry);
+            var vm = new DiaryEntryViewModel
+            {
+                Id = diaryEntry.Id,
+                Title = diaryEntry.Title,
+                Content = diaryEntry.Content,
+                Created = diaryEntry.Created
+            };
+
+            return View(vm);
         }
 
         [HttpPost]

@@ -7,6 +7,9 @@
         </div>
 
         <form asp-action="Edit" method="post" class="space-y-6">
+            <input type="hidden" asp-for="Id" />
+
+
             <div asp-validation-summary="All" class="text-red-600"></div>
             <div>
                 <label asp-for="Title" class="block text-sm font-semibold text-slate-300 mb-2">Title</label>

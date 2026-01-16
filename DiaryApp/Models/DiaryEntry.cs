@@ -4,10 +4,6 @@ namespace DiaryApp.Models
 {
     public class DiaryEntry
     {
-
-        //Each of these properties will be a column in our database
-
-        //Anotations
         //[Key]
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = "Title can not be empty")]
